@@ -2,5 +2,5 @@
 
 Авторы - Клещев Кирилл, Баталин Вадим
 
-Пример запуска: python main.py
+Пример запуска: python main.py -p C:\Users\Name\Desktop
 
