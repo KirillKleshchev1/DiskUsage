@@ -37,6 +37,7 @@ class DiskSpaceLogic:
     Функция для получения информации о диске.
     Возвращает кортеж, содержащий размер диска, используемое место на диске
     """
+
     def get_disk_usage(self):
         total, _, _ = shutil.disk_usage(self.path)
         walk_gen = os.walk(self.path)
@@ -49,6 +50,10 @@ class DiskSpaceLogic:
                     for category, extensions in self.file_types.items():
                         if any(file.endswith(ext) for ext in extensions):
                             usage[category] += file_size
+                            break
+                    else:
+                        usage["Other"] += file_size
                 except Exception as e:
                     print(f"Error on file {full_path}: {str(e)}")
+                    usage["Other"] += file_size
         return total, usage

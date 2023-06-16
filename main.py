@@ -7,7 +7,7 @@ from diskSpaceLogic import DiskSpaceLogic
 
 def arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--path', type=str, help='Путь')
+    parser.add_argument('-p', '--path', default='/', type=str, help='Путь')
     return parser.parse_args()
 
 
@@ -26,7 +26,7 @@ class DiskSpaceWidget(QMainWindow):
 
         self.labels = {}
 
-        for category in ["Documents", "Images", "Videos", "Music", "Archives"]:
+        for category in ["Documents", "Images", "Videos", "Music", "Archives", "Other"]:
             label = QLabel(self)
             self.layout.addWidget(label)
             self.labels[category] = label
@@ -37,20 +37,16 @@ class DiskSpaceWidget(QMainWindow):
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_disk_space)
-        self.timer.start(1000)
+        self.timer.start(1000)  # Update  every 100 second
 
     def update_disk_space(self):
-        """
-        Функция для подсчитывания веса файлов из разных категорий.
-        Обновляется каждые 100 секунд.
-        """
         total, usage = self.logic.get_disk_usage()
         for category, size in usage.items():
             self.labels[category].setText(f"{category}: {size / (1024 * 1024):.2f} MB")
         free_space = total - sum(usage.values())
         free_space_percent = free_space / total * 100
         self.progress_bar.setValue(int(free_space_percent))
-        self.timer.start(100000)
+        self.timer.start(100000)  # Update  every 100 second
 
 
 if __name__ == '__main__':
